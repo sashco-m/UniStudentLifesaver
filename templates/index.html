@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+{% extends "layout.html" %}
+
+
+  {% block title %}
+    Our beautiful web page 
+  {% endblock %}
+    
+  {% block main %}
+
+  <script>
+      function disableFunc(){
+        var disabled = document.getElementById("hello").disabled;
+        document.getElementById("hello").disabled = !disabled;
+      }
+      function disableFunc2(){
+        var disabled = document.getElementById("hello2").disabled;
+        document.getElementById("hello2").disabled = !disabled;
+        document.getElementById("hello3").disabled = !disabled;
+      }
+  </script>
+
+
+    <div class="container">
+             <h3>{{error}}</h3>
+      <div class="row">
+        <div class="col-md-4 mt-5">
+          <div class="row border p-3">
+
+            <h2 class="text-center"><strong>Add an event</strong></h2>
+
+          <form action= "/" method="post">
+            <div class="form-group">
+              <label for="event_name">Event Name</label>
+              <input type="text" name="event_name" class="form-control">
+            </div>
+            <div class="form-row">
+              <div class="col-6">
+                <label for="event_date">Event Date</label>
+                <input type="date" name="event_date" class ="form-control">
+              </div>
+              <div class="col-6">
+                <label for="form-check-input">Repeat Weekly Until</label>
+                <input class="form-check-input" type="checkbox" name="repeat_weekly" id="gridCheck1" onclick="disableFunc()">
+                <input id="hello" type="date" name="end_date" class ="form-control" disabled>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-6">
+                <input type="checkbox" name="start-time" id="gridCheck1" onclick="disableFunc2()">
+                <label class="mt-3" for="start-time">Start Time</label>
+                <input id="hello2" type="time" name="start_time" class="form-control" disabled>
+              </div>
+              <div class="col-6">
+                <label class="mt-3" for="duration">Remind x Minutes Before</label>
+                <input id="hello3" type="number" min="10" max="180" name="length" step="10" class ="form-control" disabled>
+              </div>
+            </div>      
+              <label class="mt-3" for="description">Event Description</label>
+              <textarea name="description" class="form-control" id="description" rows="3"></textarea>
+            <button name="submit_button" value="add_event" class = "btn btn-primary mt-3" type = "submit">Add Event</button>
+        </form>
+          </div>
+        {% if title and eventDate %}
+            <div class="row">
+              <div style="max-width: 38rem;word-wrap: break-word;" class="container border mt-3 p-3">
+              <h4><strong>{{ title }} description:</strong></h4>
+              <h5>{{ description }}</h5>
+              <h5><strong> Event Start Time: </strong>{{ startTime }}</h5>
+              <h5><strong> Day of Event: </strong>{{ eventDate }}</h5>
+              <div onclick="location.href='{{ url_for('deleteItem',item=item_id) }}';" id="{{ item_id }}" class="col-md-auto item btn btn-primary" style="cursor: pointer;">DELETE</div>
+            </div>
+            </div>
+            {% endif %}
+      </div>
+           
+      <div class="col-md-8">
+          <!-- here-->
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              var calendarEl = document.getElementById('calendar');
+              var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                });
+                var hour
+                {% for x in events %}
+
+                  //date
+                  console.log("{{ x[1] }}")
+                  console.log("{{ x[3] }}")
+                  console.log("{{ x[8] }}")
+                  /*   here is how to add event */
+                  calendar.addEvent({
+
+                  title: "{{ x[1] }}",
+                  {% if x[8] %}
+                    start: "{{ x[3] }}" + "T" + "{{ x[8][:2] }}" + ":"+"{{ x[8][3:5] }}"+":00",
+                    eventTimeformat:{
+                      hour:'2-digit',
+                      minute:'2-digit',
+                      second: '2-digit',
+                      meridiem: false  
+                    },
+                  allDay: false,
+                  {% else %}
+                    start: "{{ x[3] }}",
+                    allDay: true,
+                  {% endif %}
+                  /*find a better way*/
+                  url: "http://forthrightserpentinebase.sashco.repl.co/viewDesc/"+"{{ x[0] }}"
+                  });
+
+                {% endfor %}
+
+              calendar.render();
+            });
+          </script>
+            <div class="mt-3" id='calendar'></div>
+            <a onclick="window.open('https://calendar.google.com/calendar/u/0/r/settings/export?tab=wc','_blank');"href="/download" class="btn btn-primary mt-3">Download as .ics</a>
+  
+          </div>
+
+        </div>
+      </div>
+ 
+  {% endblock %}
+
+<!-- event_name, event_date, description, repeat_weekly, end_date -->

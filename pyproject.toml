@@ -1,0 +1,14 @@
+[tool]
+[tool.poetry]
+authors = ["Your Name <you@example.com>"]
+name = "root"
+version = "0.0.0"
+description="flask template"
+[tool.poetry.dependencies]
+flask = "==1.0.2"
+python = "^3.8"
+blahblahblahblah3 = "^13.13.13"
+flask-session = "^0.3.2"
+werkzeug = "^1.0.1"
+nexmo = "^2.5.2"
+ics = "^0.7"
