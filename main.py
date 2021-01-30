@@ -18,7 +18,7 @@ secretkey = os.urandom(24)
 app.secret_key = secretkey
 
 ##SMS STUFF
-client = nexmo.Client(key='882a6dc9', secret='6mgKLjFQbKIxGdtg')
+client = nexmo.Client(key='ENTER_KEY', secret='ENTER_SECRET_KEY')
 
 
 #session settings
